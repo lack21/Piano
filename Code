@@ -1,0 +1,262 @@
+# lear
+# Piano
+
+# Welcome to the Piano game
+# This game is made in pygame
+
+import random as rd
+import pygame
+
+if __name__ == "__main__":
+    pygame.init()
+
+    # Screen
+    WIDTH = 600
+    HEIGHT = 800
+
+    screen = pygame.display.set_mode((WIDTH, HEIGHT))
+
+
+    # Background
+    background = pygame.image.load("piano_bg.png")
+
+
+    # Title
+    pygame.display.set_caption("Piano")
+
+
+    # Icon
+    icon = pygame.image.load("piano_icon.png")
+
+    pygame.display.set_icon(icon)
+
+
+    # Lines
+    class Line:
+        def __init__(self, line, line_1_X, line_1_Y, line_2_X ,line_2_Y, line_3_X, line_3_Y):
+            self.line = line
+
+            self.line_1_X = line_1_X
+            self.line_1_Y = line_1_Y
+
+            self.line_2_X = line_2_X
+            self.line_2_Y = line_2_Y
+
+            self.line_3_X = line_3_X
+            self.line_3_Y = line_3_Y
+
+        def get_line_1(self):
+            screen.blit(self.line, (self.line_1_X, self.line_1_Y))
+
+        def get_line_2(self):
+            screen.blit(self.line, (self.line_2_X, self.line_2_Y))
+
+        def get_line_3(self):
+            screen.blit(self.line, (self.line_3_X, self.line_3_Y))
+
+    line = pygame.image.load("line.png")
+    line_1x = 150
+    line_1y = 0
+
+    line_2x = 300
+    line_2y = 0
+
+    line_3x = 450
+    line_3y = 0
+
+    LN = Line(line, line_1x, line_1y, line_2x, line_2y, line_3x, line_3y)
+
+
+    # Disks
+    class Disks:
+        def __init__(self, disk_1, disk_1_X, disk_1_Y, disk_2, disk_2_X, disk_2_Y, disk_3, disk_3_X, disk_3_Y, disk_4, disk_4_X, disk_4_Y):
+            self.disk_1 = disk_1
+            self.disk_1_X = disk_1_X
+            self.disk_1_Y = disk_1_Y
+
+            self.disk_2 = disk_2
+            self.disk_2_X = disk_2_X
+            self.disk_2_Y = disk_2_Y
+
+            self.disk_3 = disk_3
+            self.disk_3_X = disk_3_X
+            self.disk_3_Y = disk_3_Y
+            
+            self.disk_4 = disk_4
+            self.disk_4_X = disk_4_X
+            self.disk_4_Y = disk_4_Y
+
+        def get_disk_1(self):
+            screen.blit(self.disk_1, (self.disk_1_X, self.disk_1_Y))
+
+        def get_disk_2(self):
+            screen.blit(self.disk_2, (self.disk_2_X, self.disk_2_Y))
+
+        def get_disk_3(self):
+            screen.blit(self.disk_3, (self.disk_3_X, self.disk_3_Y))
+
+        def get_disk_4(self):
+            screen.blit(self.disk_4, (self.disk_4_X, self.disk_4_Y))
+
+    disk1 = pygame.image.load("disk_1.png")
+    disk1_x = 45
+    disk1_y = -120
+
+    disk2 = pygame.image.load("disk_2.png")
+    disk2_x = 195
+    disk2_y = -120
+
+    disk3 = pygame.image.load("disk_3.png")
+    disk3_x = 345
+    disk3_y = -120
+
+    disk4 = pygame.image.load("disk_4.png")
+    disk4_x = 495
+    disk4_y = -120
+
+    speed = [0.6, 0.7, 0.8, 0.9, 1]
+    rd_1 = rd.randint(0, 4)
+    rd_2 = rd.randint(0, 4)
+    rd_3 = rd.randint(0, 4)
+    rd_4 = rd.randint(0, 4)
+
+
+    DS = Disks(disk1, disk1_x, disk1_y, disk2, disk2_x, disk2_y, disk3, disk3_x, disk3_y, disk4, disk4_x, disk4_y)
+
+
+    # Statistics
+    text = pygame.font.Font("freesansbold.ttf", 46)
+
+    class Statistics:
+        def __init__(self, win, lose, score):
+            self.win = win
+            self.lose = lose
+            self.score = score
+
+        def get_win(self):
+            win_text = text.render(self.win, True, (180, 60, 180))
+            screen.blit(win_text, (200, 250))
+
+        def get_lose(self):
+            lose_text = text.render(self.lose, True, (60, 180, 100))
+            screen.blit(lose_text, (200, 250))
+
+        def get_score(self):
+            score_text = text.render(f"Score : {self.score}", True, (200, 200, 100))
+            screen.blit(score_text, (200, 40))
+
+    win = "You Win!"
+    lost = "You Lost!"
+    score = 0
+
+    STAT = Statistics(win, lost, score)
+
+
+    # Sound
+    WINNING = pygame.mixer.Sound("TTT_win.wav")
+    LOSING = pygame.mixer.Sound("losing.wav")
+    TAKE_1 = pygame.mixer.Sound("taking_shield.wav")
+    TAKE_2 = pygame.mixer.Sound("taking_heart.wav")
+    TAKE_3 = pygame.mixer.Sound("taking_teleport.wav")
+    TAKE_4 = pygame.mixer.Sound("score_gaining.wav")
+
+    S_RD = rd.randint(0, 3)
+    TAKING_SOUND = [TAKE_1, TAKE_2, TAKE_3, TAKE_4]
+
+    DONE = False
+
+    running = True
+    while running:
+        screen.blit(background, (0, 0))
+
+        x, y = pygame.mouse.get_pos()
+
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                running = False
+
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                if x >= DS.disk_1_X and x <= DS.disk_1_X + 64 and y >= DS.disk_1_Y and y <= DS.disk_1_Y + 64:
+                    DS.disk_1_Y = -120
+                    STAT.score += 1
+                    TAKING_SOUND[S_RD].play()
+                    S_RD = rd.randint(0, 3)
+                    rd_1 = rd.randint(0, 4)
+
+                if x >= DS.disk_2_X and x <= DS.disk_2_X + 64 and y >= DS.disk_2_Y and y <= DS.disk_2_Y + 64:
+                    DS.disk_2_Y = -120
+                    STAT.score += 1
+                    TAKING_SOUND[S_RD].play()
+                    S_RD = rd.randint(0, 3)
+                    rd_2 = rd.randint(0, 4)
+
+                if x >= DS.disk_3_X and x <= DS.disk_3_X + 64 and y >= DS.disk_3_Y and y <= DS.disk_3_Y + 64:
+                    DS.disk_3_Y = -120
+                    STAT.score += 1
+                    TAKING_SOUND[S_RD].play()
+                    S_RD = rd.randint(0, 3)
+                    rd_3 = rd.randint(0, 4)
+
+                if x >= DS.disk_4_X and x <= DS.disk_4_X + 64 and y >= DS.disk_4_Y and y <= DS.disk_4_Y + 64:
+                    DS.disk_4_Y = -120
+                    STAT.score += 1
+                    TAKING_SOUND[S_RD].play()
+                    S_RD = rd.randint(0, 3)
+                    rd_4 = rd.randint(0, 4)
+
+
+        if not(DONE):
+            DS.disk_1_Y += speed[rd_1]
+            DS.disk_2_Y += speed[rd_2]
+            DS.disk_3_Y += speed[rd_3]
+            DS.disk_4_Y += speed[rd_4]
+
+        if DS.disk_1_Y > 950:
+            DONE = True
+
+        if DS.disk_2_Y > 950:
+            DONE = True
+
+        if DS.disk_3_Y > 950:
+            DONE = True
+
+        if DS.disk_4_Y > 950:
+            DONE = True
+
+        LN.get_line_1()
+        LN.get_line_2()
+        LN.get_line_3()
+
+        STAT.get_score()
+
+
+        # Losing
+        if DONE and STAT.score != 99:
+            STAT.get_lose()
+
+
+        # Winning
+        if STAT.score == 99:
+            STAT.get_win()
+            DONE = True
+
+
+        # Time
+        clock = pygame.time.Clock()
+        if not(DONE):
+            clocker = round(pygame.time.get_ticks() / 1000, 2)
+        clock_text = pygame.font.Font("freesansbold.ttf", 40)
+
+        def time():
+            clock_time = clock_text.render(str(clocker), True, (160, 180, 180))
+            screen.blit(clock_time, (250, 750))
+
+        time()
+
+        # Disks (Animation)
+        DS.get_disk_1()
+        DS.get_disk_2()
+        DS.get_disk_3()
+        DS.get_disk_4()
+
+        pygame.display.update()

@@ -163,6 +163,9 @@ if __name__ == "__main__":
     S_RD = rd.randint(0, 3)
     TAKING_SOUND = [TAKE_1, TAKE_2, TAKE_3, TAKE_4]
 
+    WN = True
+    LS = True
+
     DONE = False
 
     running = True
@@ -234,11 +237,19 @@ if __name__ == "__main__":
         if DONE and STAT.score != 99:
             STAT.get_lose()
 
+            if LS:
+                LOSING.play()
+                LS = False
+
 
         # Winning
         if STAT.score == 99:
             STAT.get_win()
             DONE = True
+
+            if WN:
+                WINNING.play()
+                WN = False
 
 
         # Time

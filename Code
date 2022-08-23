@@ -178,7 +178,7 @@ if __name__ == "__main__":
             if event.type == pygame.QUIT:
                 running = False
 
-            if event.type == pygame.MOUSEBUTTONDOWN:
+            if event.type == pygame.MOUSEBUTTONDOWN and not(DONE):
                 if x >= DS.disk_1_X and x <= DS.disk_1_X + 64 and y >= DS.disk_1_Y and y <= DS.disk_1_Y + 64:
                     DS.disk_1_Y = -120
                     STAT.score += 1
